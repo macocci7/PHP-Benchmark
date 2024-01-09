@@ -1,0 +1,8 @@
+1:   str_starts_with() =>	Time: 0.008290 sec
+2:           strpbrk() =>	Time: 0.008492 sec
+3:            strpos() =>	Time: 0.008738 sec
+4:        preg_match() =>	Time: 0.009209 sec
+5:            strstr() =>	Time: 0.009339 sec
+6:    substr_compare() =>	Time: 0.009417 sec
+7:           strncmp() =>	Time: 0.012187 sec
+8: strcmp() + substr() =>	Time: 0.015219 sec
