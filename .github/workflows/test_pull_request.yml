@@ -87,7 +87,7 @@ jobs:
         run: composer update
 
       - name: PHP Lint
-        run: ./vendor/bin/parallel-lint src tests example
+        run: ./vendor/bin/parallel-lint src tests examples
 
       - name: Unit tests
         run: |
@@ -138,7 +138,7 @@ jobs:
         run: composer require phpunit/phpunit:^9.6 phploc/phploc:* sebastian/version:* --with-all-dependencies
 
       - name: PHP Lint
-        run: ./vendor/bin/parallel-lint src tests example
+        run: ./vendor/bin/parallel-lint src tests examples
 
       - name: Unit tests
         run: |
