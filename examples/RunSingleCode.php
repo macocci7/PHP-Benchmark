@@ -8,10 +8,10 @@ $iteration = 10000;
 $haystack = 'GPSAltitude';
 $needle = 'GPS';
 $name = 'str_starts_with()';
-$callback = function () use ($haystack, $needle) {
+$callback = function ($haystack, $needle) {
     if (str_starts_with($haystack, $needle)) {
     }
 };
-
-$result = Benchmark::code($name, $callback, $iteration);
+$params = [ 'haystack' => $haystack, 'needle' => $needle, ];
+$result = Benchmark::code($name, $callback, $params, $iteration);
 Benchmark::stdout($result);
