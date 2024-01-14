@@ -64,19 +64,19 @@ There're several options:
     $haystack = 'GPSAltitude';
     $needle = 'GPS';
     $name = 'str_starts_with()';
-    $callback = function () use ($haystack, $needle) {
+    $callback = function ($haystack, $needle) {
         if (str_starts_with($haystack, $needle)) {
         }
     };
-
-    $result = Benchmark::code($name, $callback, $iteration);
+    $params = [ 'haystack' => $haystack, 'needle' => $needle, ];
+    $result = Benchmark::code($name, $callback, $params, $iteration);
     Benchmark::stdout($result);
     ```
 
 - Result:
 
     ```
-    1: str_starts_with() =>	Time: 0.007826 sec
+    1: str_starts_with() =>	Time: 0.008332 sec
     ```
 
 ### 4.2. Usage: Run Multiple Codes
@@ -91,61 +91,63 @@ There're several options:
     use Macocci7\PhpBenchmark\Benchmark;
 
     $iteration = 10000;
-    $haystack = 'GPSAltitude';
-    $needle = 'GPS';
-    $pattern = sprintf("/^%s/", $needle);
+    $params = [
+        'haystack' => 'GPSAltitude',
+        'needle' => 'GPS',
+        'pattern' => sprintf("/^%s/", 'GPS'),
+    ];
     $sort = true;
     $desc = false;
     $callbacks = [
-        'str_starts_with()' => function () use ($haystack, $needle) {
+        'str_starts_with()' => function ($haystack, $needle, $pattern) {
             if (str_starts_with($haystack, $needle)) {
             }
         },
-        'strpos()' => function () use ($haystack, $needle) {
+        'strpos()' => function ($haystack, $needle, $pattern) {
             if (strpos($haystack, $needle)) {
             }
         },
-        'strpbrk()' => function () use ($haystack, $needle) {
+        'strpbrk()' => function ($haystack, $needle, $pattern) {
             if (strpbrk($haystack, $needle)) {
             }
         },
-        'strncmp()' => function () use ($haystack, $needle) {
-            if (0 === strncmp($haystack, $needle, 4)) {
+        'strncmp()' => function ($haystack, $needle, $pattern) {
+            if (0 === strncmp($haystack, $needle, 3)) {
             }
         },
-        'strstr()' => function () use ($haystack, $needle) {
+        'strstr()' => function ($haystack, $needle, $pattern) {
             if (strstr($haystack, $needle)) {
             }
         },
-        'preg_match()' => function () use ($haystack, $pattern) {
+        'preg_match()' => function ($haystack, $needle, $pattern) {
             if (preg_match($pattern, $haystack)) {
             }
         },
-        'strcmp() + substr()' => function () use ($haystack, $needle) {
-            if (0 === strcmp(substr($haystack, 0, 4), $needle)) {
+        'strcmp() + substr()' => function ($haystack, $needle, $pattern) {
+            if (0 === strcmp(substr($haystack, 0, 3), $needle)) {
             }
         },
-        'substr_compare()' => function () use ($haystack, $needle) {
-            if (0 === substr_compare($haystack, $needle, 0, 4)) {
+        'substr_compare()' => function ($haystack, $needle, $pattern) {
+            if (0 === substr_compare($haystack, $needle, 0, 3)) {
             }
         },
     ];
 
-    $results = Benchmark::codes($callbacks, $iteration, $sort, $desc);
+    $results = Benchmark::codes($callbacks, $params, $iteration, $sort, $desc);
     Benchmark::stdout($results);
     ```
 
 - Result:
 
     ```
-    1:   str_starts_with() =>	Time: 0.008290 sec
-    2:           strpbrk() =>	Time: 0.008492 sec
-    3:            strpos() =>	Time: 0.008738 sec
-    4:        preg_match() =>	Time: 0.009209 sec
-    5:            strstr() =>	Time: 0.009339 sec
-    6:    substr_compare() =>	Time: 0.009417 sec
-    7:           strncmp() =>	Time: 0.012187 sec
-    8: strcmp() + substr() =>	Time: 0.015219 sec
+    1:   str_starts_with() =>	Time: 0.008634 sec
+    2:           strpbrk() =>	Time: 0.008911 sec
+    3:           strncmp() =>	Time: 0.009266 sec
+    4:            strstr() =>	Time: 0.009594 sec
+    5:            strpos() =>	Time: 0.009826 sec
+    6:        preg_match() =>	Time: 0.011233 sec
+    7:    substr_compare() =>	Time: 0.011373 sec
+    8: strcmp() + substr() =>	Time: 0.012719 sec
     ```
 
 ## 5. Examples
@@ -161,4 +163,4 @@ There're several options:
 
 *Document Created: 2024/01/09*
 
-*Document Updated: 2024/01/09*
+*Document Updated: 2024/01/14*

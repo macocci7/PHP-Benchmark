@@ -1,8 +1,8 @@
-1:   str_starts_with() =>	Time: 0.008290 sec
-2:           strpbrk() =>	Time: 0.008492 sec
-3:            strpos() =>	Time: 0.008738 sec
-4:        preg_match() =>	Time: 0.009209 sec
-5:            strstr() =>	Time: 0.009339 sec
-6:    substr_compare() =>	Time: 0.009417 sec
-7:           strncmp() =>	Time: 0.012187 sec
-8: strcmp() + substr() =>	Time: 0.015219 sec
+1:   str_starts_with() =>	Time: 0.008634 sec
+2:           strpbrk() =>	Time: 0.008911 sec
+3:           strncmp() =>	Time: 0.009266 sec
+4:            strstr() =>	Time: 0.009594 sec
+5:            strpos() =>	Time: 0.009826 sec
+6:        preg_match() =>	Time: 0.011233 sec
+7:    substr_compare() =>	Time: 0.011373 sec
+8: strcmp() + substr() =>	Time: 0.012719 sec

@@ -1,1 +1,1 @@
-1: str_starts_with() =>	Time: 0.007826 sec
+1: str_starts_with() =>	Time: 0.008332 sec

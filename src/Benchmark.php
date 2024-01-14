@@ -12,14 +12,18 @@ class Benchmark
     /**
      * runs callback and returns microtime as seconds.
      * @param   \Closure    $callback
+     * @param   array       $params
      * @param   int         $iteration = 1
      * @return  float
      */
-    public static function run(\Closure $callback, ?int $iteration = 1)
-    {
+    public static function run( // @phpstan-ignore-line
+        \Closure $callback,
+        array $params,
+        ?int $iteration = 1
+    ) {
         $start = microtime(true);
         for ($i = 0; $i < $iteration; $i++) {
-            $callback();
+            $callback(...$params);
         }
         return microtime(true) - $start;
     }
@@ -28,21 +32,24 @@ class Benchmark
      * benchmarks the code.
      * @param   string      $name
      * @param   \Closure    $callback
+     * @param   array       $params
      * @param   int         $iteration = 1
      * @return  float[]
      */
-    public static function code(
+    public static function code( // @phpstan-ignore-line
         string $name,
         \Closure $callback,
+        array $params,
         ?int $iteration = 1
     ) {
-        $result = self::run($callback, $iteration);
+        $result = self::run($callback, $params, $iteration);
         return [$name => $result];
     }
 
     /**
      * benchmarks the codes.
      * @param   mixed[]     $callbacks
+     * @param   array       $params
      * @param   int         $iteration = 1
      * @param   bool        $sort = false
      * @param   bool        $desc = false
@@ -51,8 +58,9 @@ class Benchmark
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public static function codes(
+    public static function codes( // @phpstan-ignore-line
         array $callbacks,
+        array $params,
         ?int $iteration = 1,
         ?bool $sort = false,
         ?bool $desc = false,
@@ -62,7 +70,7 @@ class Benchmark
         }
         $results = [];
         foreach ($callbacks as $name => $callback) {
-            $results[$name] = self::run($callback, $iteration); // @phpstan-ignore-line
+            $results[$name] = self::run($callback, $params, $iteration); // @phpstan-ignore-line
         }
         if ($sort) {
             if ($desc) {
