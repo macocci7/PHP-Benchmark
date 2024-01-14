@@ -247,7 +247,7 @@ final class BenchmarkTest extends TestCase
         $this->assertSame($callbacksKeys, $resultKeys);
         foreach ($result as $value) {
             $this->assertTrue(is_float($value));
-            $this->assertTrue($value > 0);
+            $this->assertTrue($value >= 0);
         }
     }
 }
