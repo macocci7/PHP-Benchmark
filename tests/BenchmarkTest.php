@@ -6,6 +6,7 @@ namespace Macocci7\PhpBenchmark;
 
 require('vendor/autoload.php');
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBenchmark\Benchmark;
 
@@ -38,9 +39,7 @@ final class BenchmarkTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_run_can_return_float_correctly
-     */
+    #[DataProvider('provide_run_can_return_float_correctly')]
     public function test_run_can_return_float_correctly(\Closure $callback, array $params, int|null $itelation): void
     {
         $result = is_null($itelation) ? Benchmark::run($callback, $params) : Benchmark::run($callback, $params, $itelation);
@@ -83,9 +82,7 @@ final class BenchmarkTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_code_can_return_array_correctly
-     */
+    #[DataProvider('provide_code_can_return_array_correctly')]
     public function test_code_can_run_code_correctly(string $name, \Closure $callback, array $params, int|null $itelation): void
     {
         $result = is_null($itelation)
@@ -109,9 +106,7 @@ final class BenchmarkTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_codes_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_codes_can_throw_exception_with_invalid_param')]
     public function test_codes_can_throw_exception_with_invalid_param(
         array $callbacks,
         array $params
@@ -218,9 +213,7 @@ final class BenchmarkTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_codes_can_return_results_correctly
-     */
+    #[DataProvider('provide_codes_can_return_results_correctly')]
     public function test_codes_can_return_results_correctly(
         array $callbacks,
         array $params,

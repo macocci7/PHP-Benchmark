@@ -45,7 +45,7 @@ test_and_lint() {
     echo "-----------------------------------------------------------"
     echo "[PHP $1][phpunit]"
     ./vendor/bin/phpunit ./tests/ \
-                         --color auto
+                         --color=auto
     echo "-----------------------------------------------------------"
 }
 

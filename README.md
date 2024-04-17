@@ -15,7 +15,7 @@ A Simple Benchmark Script For PHP.
 
 ## 2. Requirements
 
-- PHP 8.0.30 or later
+- PHP 8.1 or later
 - (Optional) git
 - (Optional) Composer
 
@@ -23,9 +23,9 @@ A Simple Benchmark Script For PHP.
 
 There're several options:
 
-- Option 1: Copy [Benchmark.php](src/Benchmark.php) to your environment
+- Option 1: Copy or download [Benchmark.php](src/Benchmark.php) to your environment
 
-    and require the code in your PHP, instead of `vendor/autoload.php`.
+    and `require` the code in your PHP, instead of `vendor/autoload.php`.
 
     This is the most simple way.
 
@@ -53,6 +53,7 @@ There're several options:
 
 - PHP:
 
+
     ```php
     <?php
 
@@ -61,14 +62,17 @@ There're several options:
     use Macocci7\PhpBenchmark\Benchmark;
 
     $iteration = 10000;
+
     $haystack = 'GPSAltitude';
     $needle = 'GPS';
+
     $name = 'str_starts_with()';
     $callback = function ($haystack, $needle) {
         if (str_starts_with($haystack, $needle)) {
         }
     };
     $params = [ 'haystack' => $haystack, 'needle' => $needle, ];
+
     $result = Benchmark::code($name, $callback, $params, $iteration);
     Benchmark::stdout($result);
     ```
@@ -91,13 +95,16 @@ There're several options:
     use Macocci7\PhpBenchmark\Benchmark;
 
     $iteration = 10000;
+
     $params = [
         'haystack' => 'GPSAltitude',
         'needle' => 'GPS',
         'pattern' => sprintf("/^%s/", 'GPS'),
     ];
+
     $sort = true;
     $desc = false;
+
     $callbacks = [
         'str_starts_with()' => function ($haystack, $needle, $pattern) {
             if (str_starts_with($haystack, $needle)) {
@@ -163,4 +170,4 @@ There're several options:
 
 *Document Created: 2024/01/09*
 
-*Document Updated: 2024/01/14*
+*Document Updated: 2024/04/17*
