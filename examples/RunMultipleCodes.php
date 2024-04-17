@@ -5,13 +5,16 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use Macocci7\PhpBenchmark\Benchmark;
 
 $iteration = 10000;
+
 $params = [
     'haystack' => 'GPSAltitude',
     'needle' => 'GPS',
     'pattern' => sprintf("/^%s/", 'GPS'),
 ];
+
 $sort = true;
 $desc = false;
+
 $callbacks = [
     'str_starts_with()' => function ($haystack, $needle, $pattern) {
         if (str_starts_with($haystack, $needle)) {
