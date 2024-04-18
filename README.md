@@ -57,7 +57,7 @@ There're several options:
     ```php
     <?php
 
-    require_once(__DIR__ . '/../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBenchmark\Benchmark;
 
@@ -90,7 +90,7 @@ There're several options:
     ```php
     <?php
 
-    require_once(__DIR__ . '/../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBenchmark\Benchmark;
 
@@ -170,4 +170,4 @@ There're several options:
 
 *Document Created: 2024/01/09*
 
-*Document Updated: 2024/04/17*
+*Document Updated: 2024/04/18*
