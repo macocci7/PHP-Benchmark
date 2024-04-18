@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpBenchmark;
 
-require('vendor/autoload.php');
-
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBenchmark\Benchmark;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 final class BenchmarkTest extends TestCase
