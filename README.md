@@ -170,4 +170,6 @@ There're several options:
 
 *Document Created: 2024/01/09*
 
-*Document Updated: 2024/04/18*
+*Document Updated: 2025/01/04*
+
+Copyright 2024-2025 macocci7.

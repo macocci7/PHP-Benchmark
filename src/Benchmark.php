@@ -12,11 +12,11 @@ class Benchmark
     /**
      * runs callback and returns microtime as seconds.
      * @param   \Closure    $callback
-     * @param   array       $params
+     * @param   mixed[]     $params
      * @param   int         $iteration = 1
      * @return  float
      */
-    public static function run( // @phpstan-ignore-line
+    public static function run(
         \Closure $callback,
         array $params,
         ?int $iteration = 1
@@ -32,11 +32,11 @@ class Benchmark
      * benchmarks the code.
      * @param   string      $name
      * @param   \Closure    $callback
-     * @param   array       $params
+     * @param   mixed[]     $params
      * @param   int         $iteration = 1
      * @return  float[]
      */
-    public static function code( // @phpstan-ignore-line
+    public static function code(
         string $name,
         \Closure $callback,
         array $params,
@@ -48,17 +48,15 @@ class Benchmark
 
     /**
      * benchmarks the codes.
-     * @param   mixed[]     $callbacks
-     * @param   array       $params
-     * @param   int         $iteration = 1
-     * @param   bool        $sort = false
-     * @param   bool        $desc = false
+     * @param   array<int, \Closure>    $callbacks
+     * @param   mixed[]                 $params
+     * @param   int                     $iteration = 1
+     * @param   bool                    $sort = false
+     * @param   bool                    $desc = false
      * @return  float[]
      * @thrown  \Exception
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public static function codes( // @phpstan-ignore-line
+    public static function codes(
         array $callbacks,
         array $params,
         ?int $iteration = 1,
@@ -70,7 +68,7 @@ class Benchmark
         }
         $results = [];
         foreach ($callbacks as $name => $callback) {
-            $results[$name] = self::run($callback, $params, $iteration); // @phpstan-ignore-line
+            $results[$name] = self::run($callback, $params, $iteration);
         }
         if ($sort) {
             if ($desc) {
@@ -91,12 +89,11 @@ class Benchmark
     {
         $i = 0;
         $lnumber = strlen((string) count($results));
-        $lname = max(
-            array_map(
-                fn ($name) => strlen($name),
-                array_keys($results)
-            )
+        $lengths = array_map(
+            fn ($name) => strlen($name),
+            array_keys($results)
         );
+        $lname = max(count($lengths) > 0 ? $lengths : [1]);
         $format = "%" . $lnumber . "d: %" . $lname . "s =>\tTime: %.6f sec\n";
         foreach ($results as $name => $time) {
             $i++;
