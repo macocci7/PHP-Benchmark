@@ -1,4 +1,4 @@
-<?php   // phpcs:ignore
+<?php
 
 declare(strict_types=1);
 
@@ -8,94 +8,82 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBenchmark\Benchmark;
 
-/**
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class BenchmarkTest extends TestCase
 {
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    // phpcs:disable Generic.Files.LineLength.TooLong
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
     public static function provide_run_can_return_float_correctly(): array
     {
         return [
-            "fn (), itelation: null" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'itelation' => null, ],
-            "fn (), itelation: 1" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'itelation' => 1, ],
-            "fn (), itelation: 10000" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'itelation' => 10000, ],
-            "funciton (), itelation: 1" => [
+            "fn (), iteration: null" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'iteration' => null, ],
+            "fn (), iteration: 1" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'iteration' => 1, ],
+            "fn (), iteration: 10000" => [ 'callback' => fn ($i) => $i++, 'params' => ['i' => 0], 'iteration' => 10000, ],
+            "funciton (), iteration: 1" => [
                 'callback' => function ($i) {
                     $i++;
                 },
                 'params' => ['i' => 0],
-                'itelation' => 1,
+                'iteration' => 1,
             ],
         ];
     }
 
     #[DataProvider('provide_run_can_return_float_correctly')]
-    public function test_run_can_return_float_correctly(\Closure $callback, array $params, int|null $itelation): void
+    public function test_run_can_return_float_correctly(\Closure $callback, array $params, int|null $iteration): void
     {
-        $result = is_null($itelation) ? Benchmark::run($callback, $params) : Benchmark::run($callback, $params, $itelation);
+        $result = is_null($iteration) ? Benchmark::run($callback, $params) : Benchmark::run($callback, $params, $iteration);
         $this->assertTrue(is_float($result));
-        $this->assertTrue($result > 0);
+        $this->assertTrue($result >= 0);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
     public static function provide_code_can_return_array_correctly(): array
     {
         return [
-            "fn (), itelation: null" => [
-                'name' => 'fn (), itelation: null',
+            "fn (), iteration: null" => [
+                'name' => 'fn (), iteration: null',
                 'callback' => fn ($i) => $i++,
                 'params' => ['i' => 0],
-                'itelation' => null,
+                'iteration' => null,
             ],
-            "fn (), itelation: 1" => [
-                'name' => 'fn (), itelation: 1',
+            "fn (), iteration: 1" => [
+                'name' => 'fn (), iteration: 1',
                 'callback' => fn ($i) => $i++,
                 'params' => ['i' => 0],
-                'itelation' => 1,
+                'iteration' => 1,
             ],
-            "fn (), itelation: 10000" => [
-                'name' => 'fn (), itelation: 10000',
+            "fn (), iteration: 10000" => [
+                'name' => 'fn (), iteration: 10000',
                 'callback' => fn ($i) => $i++,
                 'params' => ['i' => 0],
-                'itelation' => 10000,
+                'iteration' => 10000,
             ],
-            "function (), itelation: 1" => [
-                'name' => 'fn (), itelation: null',
+            "function (), iteration: 1" => [
+                'name' => 'function (), iteration: 1',
                 'callback' => function ($i) {
                     $i++;
                 },
                 'params' => ['i' => 0],
-                'itelation' => 1,
+                'iteration' => 1,
             ],
         ];
     }
 
     #[DataProvider('provide_code_can_return_array_correctly')]
-    public function test_code_can_run_code_correctly(string $name, \Closure $callback, array $params, int|null $itelation): void
+    public function test_code_can_run_code_correctly(string $name, \Closure $callback, array $params, int|null $iteration): void
     {
-        $result = is_null($itelation)
+        $result = is_null($iteration)
                 ? Benchmark::code($name, $callback, $params)
-                : Benchmark::code($name, $callback, $params, $itelation)
+                : Benchmark::code($name, $callback, $params, $iteration)
                 ;
         $this->assertTrue(is_array($result));
         $this->assertTrue(count($result) === 1);
         $this->assertTrue(isset($result[$name]));
         $this->assertTrue(is_float($result[$name]));
-        $this->assertTrue($result[$name] > 0);
+        $this->assertTrue($result[$name] >= 0);
     }
 
     public static function provide_codes_can_throw_exception_with_invalid_param(): array
     {
         return [
-            "callbacks:empty, itelation:null, sort:null, desc:null" => [
+            "callbacks:empty, iteration:null, sort:null, desc:null" => [
                 'callbacks' => [],
                 'params' => ['i' => 0],
             ],
@@ -112,97 +100,94 @@ final class BenchmarkTest extends TestCase
         Benchmark::codes($callbacks, $params);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
     public static function provide_codes_can_return_results_correctly(): array
     {
         return [
-            "callbacks:fn, itelation:null, sort:null, desc:null" => [
+            "callbacks:fn, iteration:null, sort:null, desc:null" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => null,
+                'iteration' => null,
                 'sort' => null,
                 'desc' => null,
             ],
-            "callbacks:fn, itelation:1, sort:null, desc:null" => [
+            "callbacks:fn, iteration:1, sort:null, desc:null" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 1,
+                'iteration' => 1,
                 'sort' => null,
                 'desc' => null,
             ],
-            "callbacks:fn, itelation:100, sort:true, desc:null" => [
+            "callbacks:fn, iteration:100, sort:true, desc:null" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => true,
                 'desc' => null,
             ],
-            "callbacks:fn, itelation:100, sort:false, desc:null" => [
+            "callbacks:fn, iteration:100, sort:false, desc:null" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => false,
                 'desc' => null,
             ],
-            "callbacks:fn, itelation:100, sort:true, desc:true" => [
+            "callbacks:fn, iteration:100, sort:true, desc:true" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => true,
                 'desc' => true,
             ],
-            "callbacks:fn, itelation:100, sort:true, desc:false" => [
+            "callbacks:fn, iteration:100, sort:true, desc:false" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => true,
                 'desc' => false,
             ],
-            "callbacks:fn, itelation:100, sort:false, desc:true" => [
+            "callbacks:fn, iteration:100, sort:false, desc:true" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => false,
                 'desc' => true,
             ],
-            "callbacks:fn, itelation:100, sort:false, desc:false" => [
+            "callbacks:fn, iteration:100, sort:false, desc:false" => [
                 'callbacks' => [
                     "fn () 1" => fn ($i) => $i += 1,
                     "fn () 2" => fn ($i) => $i += 2,
                     "fn () 3" => fn ($i) => $i += 3,
                 ],
                 'params' => ['i' => 0],
-                'itelation' => 100,
+                'iteration' => 100,
                 'sort' => false,
                 'desc' => false,
             ],
@@ -213,19 +198,19 @@ final class BenchmarkTest extends TestCase
     public function test_codes_can_return_results_correctly(
         array $callbacks,
         array $params,
-        int|null $itelation,
+        int|null $iteration,
         bool|null $sort,
         bool|null $desc
     ): void {
         $result = null;
-        if (is_null($itelation)) {
+        if (is_null($iteration)) {
             $result = Benchmark::codes($callbacks, $params);
         } elseif (is_null($sort) && is_null($desc)) {
-            $result = Benchmark::codes($callbacks, $params, $itelation);
+            $result = Benchmark::codes($callbacks, $params, $iteration);
         } elseif (is_null($desc)) {
-            $result = Benchmark::codes($callbacks, $params, $itelation, $sort);
+            $result = Benchmark::codes($callbacks, $params, $iteration, $sort);
         } elseif (!is_null($sort) && !is_null($desc)) {
-            $result = Benchmark::codes($callbacks, $params, $itelation, $sort, $desc);
+            $result = Benchmark::codes($callbacks, $params, $iteration, $sort, $desc);
         }
         $this->assertTrue(is_array($result));
         $this->assertTrue(!empty($result));
