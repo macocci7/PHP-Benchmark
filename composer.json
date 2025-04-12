@@ -1,7 +1,6 @@
 {
     "name": "macocci7/php-benchmark",
     "description": "Simple Benchmark script for PHP.",
-    "version": "0.2.2",
     "type": "library",
     "license": "MIT",
     "autoload": {

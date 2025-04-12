@@ -1,1 +1,12 @@
-1: str_starts_with() =>	Time: 0.008332 sec
+PHP 8.1
+1: str_starts_with() => Time: 0.003490 sec  Avg: 0.0000003490 sec
+
+PHP 8.2
+1: str_starts_with() => Time: 0.003906 sec  Avg: 0.0000003906 sec
+
+PHP 8.3
+1: str_starts_with() => Time: 0.004187 sec  Avg: 0.0000004187 sec
+
+PHP 8.4
+1: str_starts_with() => Time: 0.003927 sec  Avg: 0.0000003927 sec
+
