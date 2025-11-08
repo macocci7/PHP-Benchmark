@@ -175,4 +175,74 @@ class Benchmark
         }
         return $analyzed;
     }
+
+    /**
+     * benchmarks multiple codes and display analyzed results.
+     *
+     * @param   \Closure[]  $callbacks
+     * @param   int         $iteration = 1
+     * @param   string      $sortOrder = ''
+     * @thrown  \Exception
+     */
+    public static function analyze(
+        array $callbacks,
+        int $iteration = 1,
+        string $sortOrder = '',
+    ): void {
+        $results = static::getAnalyzedResults($callbacks, $iteration);
+
+        $i = 0;
+        $lnumber = strlen((string) count($results["details"]));
+        $lengths = array_map(
+            fn ($name) => strlen($name),
+            array_keys($results["details"])
+        );
+        $lname = max(count($lengths) > 0 ? $lengths : [1]);
+        echo "Analyzed Results:" . PHP_EOL;
+        echo "- Fastest: "
+            . key($results["fastest"]) . " ("
+            . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"
+            . PHP_EOL;
+        echo "- Slowest: "
+            . key($results["slowest"]) . " ("
+            . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"
+            . PHP_EOL;
+        echo "- Details:" . PHP_EOL;
+        $format = "  %" . $lnumber . "s  "
+                . "%" . ($lname - 2) . "s    "
+                . "    R2F   "
+                . "    R2S   "
+                . "Time          "
+                . "Average   "
+                ;
+        echo sprintf($format, "No.", "Name") . PHP_EOL;
+        $hl = "  " . str_repeat("-", $lnumber)
+            . "+" . str_repeat("-", $lname + 2)
+            . "+" . str_repeat("-", 10)
+            . "+" . str_repeat("-", 9)
+            . "+" . str_repeat("-", 13)
+            . "+" . str_repeat("-", 17)
+            ;
+        echo $hl . PHP_EOL;
+
+        $format = "  %" . $lnumber . "s: "
+                . "%" . $lname . "s => "
+                . "    %0.2f  "
+                . "    %0.2f  "
+                . "%.6f sec  "
+                . "%.10f sec  "
+                ;
+        foreach ($results["details"] as $name => $result) {
+            $i++;
+            echo sprintf(
+                $format,
+                $i,
+                $name,
+                $result['relative_to_fastest'],
+                $result['relative_to_slowest'],
+                $result['time'],
+                $result['average']
+            ) . PHP_EOL;
+        }
+    }
 }
