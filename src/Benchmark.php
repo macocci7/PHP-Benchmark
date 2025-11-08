@@ -241,7 +241,6 @@ class Benchmark
                 . "%.6f sec  "
                 . "%.10f sec  "
                 ;
-        echo "format:" . $format . PHP_EOL; // debug line
         foreach ($results["details"] as $name => $result) {
             $i++;
             echo sprintf(
