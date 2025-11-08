@@ -258,23 +258,27 @@ class Benchmark
 
     /**
      * pads for multibyte strings.
-     * 
+     *
      * @param   string  $text
      * @param   int     $width
      * @param   string  $padChar = ' '
      * @param   string  $align = 'right'  options: 'right', 'left', 'center'
      */
-    protected static function mbSprintfPad(string $text, int $width, string $padChar = ' ', string $align = 'right'): string
-    {
-        $textWidth = mb_strwidth($text, 'UTF-8');
+    protected static function mbSprintfPad(
+        string $text,
+        int $width,
+        string $padChar = " ",
+        string $align = "right"
+    ): string {
+        $textWidth = mb_strwidth($text, "UTF-8");
         $padLen = max($width - $textWidth, 0);
 
-        if ($align === 'right') {
+        if ($align === "right") {
             return str_repeat($padChar, $padLen) . $text;
-        } elseif ($align === 'left') {
+        } elseif ($align === "left") {
             return $text . str_repeat($padChar, $padLen);
         } else { // center
-            $left = floor($padLen / 2);
+            $left = (int) floor($padLen / 2);
             $right = $padLen - $left;
             return str_repeat($padChar, $left) . $text . str_repeat($padChar, $right);
         }
