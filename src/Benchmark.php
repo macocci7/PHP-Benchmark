@@ -138,7 +138,16 @@ class Benchmark
      * Returns the analyzed results.
      * @param   \Closure[]  $callbacks
      * @param   int         $iteration = 1
-     * @return  array<string, array{time: float, average: float}>
+     * @return  array{
+     *   fastest: array<string, array{time: float, average: float}>,
+     *   slowest: array<string, array{time: float, average: float}>,
+     *   details: array<string, array{
+     *     time: float,
+     *     average: float,
+     *     relative_to_fastest: float|null,
+     *     relative_to_slowest: float|null
+     *   }>
+     * }
      */
     public static function getAnalyzedResults(
         array $callbacks,
@@ -201,11 +210,11 @@ class Benchmark
         echo "Analyzed Results:" . PHP_EOL;
         echo "- Fastest: "
             . key($results["fastest"]) . " ("
-            . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"
+            . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"   // @phpstan-ignore-line
             . PHP_EOL;
         echo "- Slowest: "
             . key($results["slowest"]) . " ("
-            . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"
+            . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"   // @phpstan-ignore-line
             . PHP_EOL;
         echo "- Details:" . PHP_EOL;
         $format = "  %" . $lnumber . "s  "
