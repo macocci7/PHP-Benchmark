@@ -1,0 +1,16 @@
+array(2) {
+  'str_starts_with()' =>
+  array(2) {
+    'time' =>
+    double(0.003453969955444336)
+    'average' =>
+    double(3.453969955444336E-7)
+  }
+  'strpos()' =>
+  array(2) {
+    'time' =>
+    double(0.0038220882415771484)
+    'average' =>
+    double(3.8220882415771484E-7)
+  }
+}

@@ -1,0 +1,9 @@
+Analyzed Results:
+- Fastest: strpos() (0.003490 sec)
+- Slowest: str_starts_with() (0.003707 sec)
+- Details:
+  No.             Name        R2F       R2S   Time          Average   
+  -+-------------------+----------+---------+-------------+-----------------
+  1: str_starts_with() =>     1.06      1.00  0.003707 sec  0.0000003707 sec  
+  2:          strpos() =>     1.00      0.94  0.003490 sec  0.0000003490 sec  
+  3:         strpbrk() =>     1.01      0.95  0.003532 sec  0.0000003532 sec  

@@ -10,6 +10,9 @@ A Simple, single file Benchmark Script For PHP.
 - [4. Usage](#4-usage)
     - [4.1. Usage: Run Single Code](#41-usage-run-single-code)
     - [4.2. Usage: Run Multiple Codes](#42-usage-run-multiple-codes)
+    - [4.3. Usage: Getting Results as an Array](#43-usage-getting-results-as-an-array)
+    - [4.4. Usage: Displaying Analyzed Results](#44-usage-displaying-analyzed-results)
+    - [4.5. Usage: Getting Analyzed Results as an Array](#45-usage-getting-analyzed-results-as-an-array)
 - [5. Examples](#5-examples)
 - [6. LICENSE](#6-license)
 
@@ -110,10 +113,158 @@ There're several options:
     8:    substr_compare() => Time: 0.004395 sec  Avg: 0.0000004395 sec
     ```
 
+### 4.3 Usage: Getting Results as an Array
+
+- PHP:
+
+    ```php
+    var_dump(Benchmark::getResults(
+        callbacks: [
+            'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+            'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+        ],
+        iteration: 10000,
+    ));
+    ```
+
+- Result:
+
+    ```
+    array(2) {
+        'str_starts_with()' =>
+        array(2) {
+            'time' =>
+            double(0.003453969955444336)
+            'average' =>
+            double(3.453969955444336E-7)
+        }
+        'strpos()' =>
+        array(2) {
+            'time' =>
+            double(0.0038220882415771484)
+            'average' =>
+            double(3.8220882415771484E-7)
+        }
+    }
+    ```
+
+### 4.4 Usage: Displaying Analyzed Results
+
+- PHP:
+
+    ```php
+    Benchmark::analyze(
+        callbacks: [
+            'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+            'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+            'strpbrk()' => fn () => strpbrk('GPSAltitude', 'GPS'),
+        ],
+        iteration: 10000,
+    );
+    ```
+
+- Result:
+
+    ```
+    Analyzed Results:
+    - Fastest: strpos() (0.003490 sec)
+    - Slowest: str_starts_with() (0.003707 sec)
+    - Details:
+      No.             Name        R2F       R2S   Time          Average   
+      -+-------------------+----------+---------+-------------+-----------------
+      1: str_starts_with() =>     1.06      1.00  0.003707 sec  0.0000003707 sec  
+      2:          strpos() =>     1.00      0.94  0.003490 sec  0.0000003490 sec  
+      3:         strpbrk() =>     1.01      0.95  0.003532 sec  0.0000003532 sec  
+    ```
+
+- R2F: represents the ratio to the fastest time.
+- R2S: R2F represents the ratio to the slowest time.
+
+### 4.5 Usage: Getting Analyzed Results as an Array
+
+- PHP:
+
+    ```php
+    var_dump(Benchmark::getAnalyzedResults(
+        callbacks: [
+            'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+            'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+            'strpbrk()' => fn () => strpbrk('GPSAltitude', 'GPS'),
+        ],
+        iteration: 10000,
+    ));
+    ```
+
+- Result:
+
+    ```
+    array(3) {
+        'fastest' =>
+        array(1) {
+            'str_starts_with()' =>
+            array(2) {
+            'time' =>
+            double(0.0034110546112060547)
+            'average' =>
+            double(3.411054611206055E-7)
+            }
+        }
+        'slowest' =>
+        array(1) {
+            'strpos()' =>
+            array(2) {
+            'time' =>
+            double(0.0037479400634765625)
+            'average' =>
+            double(3.7479400634765627E-7)
+            }
+        }
+        'details' =>
+        array(3) {
+            'str_starts_with()' =>
+            array(4) {
+            'time' =>
+            double(0.0034110546112060547)
+            'average' =>
+            double(3.411054611206055E-7)
+            'relative_to_fastest' =>
+            double(1)
+            'relative_to_slowest' =>
+            double(0.9101145038167939)
+            }
+            'strpos()' =>
+            array(4) {
+            'time' =>
+            double(0.0037479400634765625)
+            'average' =>
+            double(3.7479400634765627E-7)
+            'relative_to_fastest' =>
+            double(1.0987628433633885)
+            'relative_to_slowest' =>
+            double(1)
+            }
+            'strpbrk()' =>
+            array(4) {
+            'time' =>
+            double(0.0036809444427490234)
+            'average' =>
+            double(3.6809444427490236E-7)
+            'relative_to_fastest' =>
+            double(1.0791221080589921)
+            'relative_to_slowest' =>
+            double(0.9821246819338423)
+            }
+        }
+    }
+    ```
+
 ## 5. Examples
 
 - [RunSingleCode.php](examples/RunSingleCode.php) >> results in [RunSingleCode.txt](examples/RunSingleCode.txt)
 - [RunMultipleCodes.php](examples/RunMultipleCodes.php) >> results in [RunMultipleCodes.txt](examples/RunMultipleCodes.txt)
+- [GetResultsAsAnArray.php](examples/GetResultsAsAnArray.php) >> results in [GetResultsAsAnArray.txt](examples/GetResultsAsAnArray.txt)
+- [DisplayAnalyzedResults.php](examples/DisplayAnalyzedResults.php) >> results in [DisplayAnalyzedResults.txt](examples/DisplayAnalyzedResults.txt)
+- [GetAnalyzedResultsAsAnArray.php](examples/GetAnalyzedResultsAsAnArray.php) >> results in [GetAnalyzedResultsAsAnArray.txt](examples/GetAnalyzedResultsAsAnArray.txt)
 
 ## 6. LICENSE
 
