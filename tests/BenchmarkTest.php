@@ -201,4 +201,29 @@ final class BenchmarkTest extends TestCase
             Benchmark::codes($callbacks, $iteration, $sort);
         }
     }
+
+    public function test_getResults_can_return_results_correctly(): void
+    {
+        $result = Benchmark::getResults(
+            callbacks: [
+                'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+                'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+            ],
+            iteration: 100,
+        );
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(count($result) === 2);
+        $this->assertEquals(
+            ['str_starts_with()', 'strpos()'],
+            array_keys($result),
+        );
+        foreach ($result as $key => $res) {
+            $this->assertArrayHasKey('time', $res);
+            $this->assertArrayHasKey('average', $res);
+            $this->assertTrue(is_float($res['time']));
+            $this->assertTrue(is_float($res['average']));
+            $this->assertFalse($res['time'] < 0);
+            $this->assertFalse($res['average'] < 0);
+        }
+    }
 }

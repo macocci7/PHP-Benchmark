@@ -31,6 +31,25 @@ class Benchmark
     }
 
     /**
+     * Returns the result as an array.
+     *
+     * @param   \Closure[] $callbacks
+     * @param   int         $iteration = 1
+     * @return  array<string, array{time: float, average: float}>
+     */
+    public static function getResults(
+        array $callbacks,
+        int $iteration = 1
+    ): array {
+        $results = [];
+        foreach ($callbacks as $name => $callback) {
+            $results[$name] = static::run($callback, $iteration);
+        }
+
+        return $results;
+    }
+
+    /**
      * benchmarks single code.
      *
      * @param   string      $name
@@ -42,7 +61,7 @@ class Benchmark
         \Closure $callback,
         int $iteration = 1
     ): void {
-        $result = [$name => static::run($callback, $iteration)];
+        $result = static::getResults([$name => $callback], $iteration);
         static::stdout($result);
     }
 
@@ -63,10 +82,7 @@ class Benchmark
             throw new \Exception("empty codes.");
         }
 
-        $results = [];
-        foreach ($callbacks as $name => $callback) {
-            $results[$name] = static::run($callback, $iteration);
-        }
+        $results = static::getResults($callbacks, $iteration);
 
         static::sort($results, $sortOrder);
 
