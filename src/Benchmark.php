@@ -127,7 +127,7 @@ class Benchmark
             echo sprintf(
                 $format,
                 $i,
-                $name,
+                static::mbSprintfPad($name, $lname, " ", "right"),
                 $result['time'],
                 $result['average']
             ) . PHP_EOL;
@@ -203,7 +203,7 @@ class Benchmark
         $i = 0;
         $lnumber = strlen((string) count($results["details"]));
         $lengths = array_map(
-            fn ($name) => strlen($name),
+            fn ($name) => mb_strwidth($name),
             array_keys($results["details"])
         );
         $lname = max(count($lengths) > 0 ? $lengths : [1]);
@@ -241,17 +241,46 @@ class Benchmark
                 . "%.6f sec  "
                 . "%.10f sec  "
                 ;
+        echo "format:" . $format . PHP_EOL; // debug line
         foreach ($results["details"] as $name => $result) {
             $i++;
             echo sprintf(
                 $format,
                 $i,
-                $name,
+                static::mbSprintfPad($name, $lname, " ", "right"),
                 $result['relative_to_fastest'],
                 $result['relative_to_slowest'],
                 $result['time'],
                 $result['average']
             ) . PHP_EOL;
+        }
+    }
+
+    /**
+     * pads for multibyte strings.
+     *
+     * @param   string  $text
+     * @param   int     $width
+     * @param   string  $padChar = ' '
+     * @param   string  $align = 'right'  options: 'right', 'left', 'center'
+     */
+    protected static function mbSprintfPad(
+        string $text,
+        int $width,
+        string $padChar = " ",
+        string $align = "right"
+    ): string {
+        $textWidth = mb_strwidth($text, "UTF-8");
+        $padLen = max($width - $textWidth, 0);
+
+        if ($align === "right") {
+            return str_repeat($padChar, $padLen) . $text;
+        } elseif ($align === "left") {
+            return $text . str_repeat($padChar, $padLen);
+        } else { // center
+            $left = (int) floor($padLen / 2);
+            $right = $padLen - $left;
+            return str_repeat($padChar, $left) . $text . str_repeat($padChar, $right);
         }
     }
 }
