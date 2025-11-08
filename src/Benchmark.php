@@ -31,6 +31,25 @@ class Benchmark
     }
 
     /**
+     * Returns the result as an array.
+     *
+     * @param   \Closure[] $callbacks
+     * @param   int         $iteration = 1
+     * @return  array<string, array{time: float, average: float}>
+     */
+    public static function getResults(
+        array $callbacks,
+        int $iteration = 1
+    ): array {
+        $results = [];
+        foreach ($callbacks as $name => $callback) {
+            $results[$name] = static::run($callback, $iteration);
+        }
+
+        return $results;
+    }
+
+    /**
      * benchmarks single code.
      *
      * @param   string      $name
@@ -42,7 +61,7 @@ class Benchmark
         \Closure $callback,
         int $iteration = 1
     ): void {
-        $result = [$name => static::run($callback, $iteration)];
+        $result = static::getResults([$name => $callback], $iteration);
         static::stdout($result);
     }
 
@@ -63,10 +82,7 @@ class Benchmark
             throw new \Exception("empty codes.");
         }
 
-        $results = [];
-        foreach ($callbacks as $name => $callback) {
-            $results[$name] = static::run($callback, $iteration);
-        }
+        $results = static::getResults($callbacks, $iteration);
 
         static::sort($results, $sortOrder);
 
@@ -112,6 +128,118 @@ class Benchmark
                 $format,
                 $i,
                 $name,
+                $result['time'],
+                $result['average']
+            ) . PHP_EOL;
+        }
+    }
+
+    /**
+     * Returns the analyzed results.
+     * @param   \Closure[]  $callbacks
+     * @param   int         $iteration = 1
+     * @return  array<string, array{time: float, average: float}>
+     */
+    public static function getAnalyzedResults(
+        array $callbacks,
+        int $iteration = 1,
+    ): array {
+        $analyzed = [];
+        $measured = static::getResults($callbacks, $iteration);
+
+        $min = null;
+        $max = null;
+        $keyMin = null;
+        $keyMax = null;
+        foreach ($measured as $key => $result) {
+            if (is_null($min) || $result['time'] < $min) {
+                $min = $result['time'];
+                $keyMin = $key;
+            }
+            if (is_null($max) || $result['time'] > $max) {
+                $max = $result['time'];
+                $keyMax = $key;
+            }
+        }
+        $analyzed["fastest"] = [$keyMin => $measured[$keyMin]];
+        $analyzed["slowest"] = [$keyMax => $measured[$keyMax]];
+        $analyzed["details"] = [];
+
+        foreach ($measured as $name => $result) {
+            $analyzed["details"][$name] = [
+                'time' => $result['time'],
+                'average' => $result['average'],
+                'relative_to_fastest' => $min > 0 ? $result['time'] / $min : null,
+                'relative_to_slowest' => $max > 0 ? $result['time'] / $max : null,
+            ];
+        }
+        return $analyzed;
+    }
+
+    /**
+     * benchmarks multiple codes and display analyzed results.
+     *
+     * @param   \Closure[]  $callbacks
+     * @param   int         $iteration = 1
+     * @param   string      $sortOrder = ''
+     * @thrown  \Exception
+     */
+    public static function analyze(
+        array $callbacks,
+        int $iteration = 1,
+        string $sortOrder = '',
+    ): void {
+        $results = static::getAnalyzedResults($callbacks, $iteration);
+
+        $i = 0;
+        $lnumber = strlen((string) count($results["details"]));
+        $lengths = array_map(
+            fn ($name) => strlen($name),
+            array_keys($results["details"])
+        );
+        $lname = max(count($lengths) > 0 ? $lengths : [1]);
+        echo "Analyzed Results:" . PHP_EOL;
+        echo "- Fastest: "
+            . key($results["fastest"]) . " ("
+            . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"
+            . PHP_EOL;
+        echo "- Slowest: "
+            . key($results["slowest"]) . " ("
+            . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"
+            . PHP_EOL;
+        echo "- Details:" . PHP_EOL;
+        $format = "  %" . $lnumber . "s  "
+                . "%" . ($lname - 2) . "s    "
+                . "    R2F   "
+                . "    R2S   "
+                . "Time          "
+                . "Average   "
+                ;
+        echo sprintf($format, "No.", "Name") . PHP_EOL;
+        $hl = "  " . str_repeat("-", $lnumber)
+            . "+" . str_repeat("-", $lname + 2)
+            . "+" . str_repeat("-", 10)
+            . "+" . str_repeat("-", 9)
+            . "+" . str_repeat("-", 13)
+            . "+" . str_repeat("-", 17)
+            ;
+        echo $hl . PHP_EOL;
+
+        $format = "  %" . $lnumber . "s: "
+                . "%" . $lname . "s => "
+                . "    %0.2f  "
+                . "    %0.2f  "
+                . "%.6f sec  "
+                . "%.10f sec  "
+                ;
+        foreach ($results["details"] as $name => $result) {
+            $i++;
+            echo sprintf(
+                $format,
+                $i,
+                $name,
+                $result['relative_to_fastest'],
+                $result['relative_to_slowest'],
                 $result['time'],
                 $result['average']
             ) . PHP_EOL;

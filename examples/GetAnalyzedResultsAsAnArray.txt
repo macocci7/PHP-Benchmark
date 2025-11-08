@@ -1,0 +1,58 @@
+array(3) {
+  'fastest' =>
+  array(1) {
+    'str_starts_with()' =>
+    array(2) {
+      'time' =>
+      double(0.0034110546112060547)
+      'average' =>
+      double(3.411054611206055E-7)
+    }
+  }
+  'slowest' =>
+  array(1) {
+    'strpos()' =>
+    array(2) {
+      'time' =>
+      double(0.0037479400634765625)
+      'average' =>
+      double(3.7479400634765627E-7)
+    }
+  }
+  'details' =>
+  array(3) {
+    'str_starts_with()' =>
+    array(4) {
+      'time' =>
+      double(0.0034110546112060547)
+      'average' =>
+      double(3.411054611206055E-7)
+      'relative_to_fastest' =>
+      double(1)
+      'relative_to_slowest' =>
+      double(0.9101145038167939)
+    }
+    'strpos()' =>
+    array(4) {
+      'time' =>
+      double(0.0037479400634765625)
+      'average' =>
+      double(3.7479400634765627E-7)
+      'relative_to_fastest' =>
+      double(1.0987628433633885)
+      'relative_to_slowest' =>
+      double(1)
+    }
+    'strpbrk()' =>
+    array(4) {
+      'time' =>
+      double(0.0036809444427490234)
+      'average' =>
+      double(3.6809444427490236E-7)
+      'relative_to_fastest' =>
+      double(1.0791221080589921)
+      'relative_to_slowest' =>
+      double(0.9821246819338423)
+    }
+  }
+}

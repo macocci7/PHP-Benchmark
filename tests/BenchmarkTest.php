@@ -201,4 +201,70 @@ final class BenchmarkTest extends TestCase
             Benchmark::codes($callbacks, $iteration, $sort);
         }
     }
+
+    public function test_getResults_can_return_results_correctly(): void
+    {
+        $result = Benchmark::getResults(
+            callbacks: [
+                'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+                'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+            ],
+            iteration: 100,
+        );
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(count($result) === 2);
+        $this->assertEquals(
+            ['str_starts_with()', 'strpos()'],
+            array_keys($result),
+        );
+        foreach ($result as $key => $res) {
+            $this->assertArrayHasKey('time', $res);
+            $this->assertArrayHasKey('average', $res);
+            $this->assertTrue(is_float($res['time']));
+            $this->assertTrue(is_float($res['average']));
+            $this->assertFalse($res['time'] < 0);
+            $this->assertFalse($res['average'] < 0);
+        }
+    }
+
+    public function test_getAnalyzedResults_can_return_results_correctly(): void
+    {
+        $result = Benchmark::getAnalyzedResults(
+            callbacks: [
+                'str_starts_with()' => fn () => str_starts_with('GPSAltitude', 'GPS'),
+                'strpos()' => fn () => strpos('GPSAltitude', 'GPS'),
+                'strpbrk()' => fn () => strpbrk('GPSAltitude', 'GPS'),
+            ],
+            iteration: 100,
+        );
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(is_array($result["fastest"]));
+        $fastestKey = array_keys($result["fastest"])[0];
+        $slowestKey = array_keys($result["slowest"])[0];
+        $fastest = $result["fastest"][$fastestKey]["time"];
+        $slowest = $result["slowest"][$slowestKey]["time"];
+        $this->assertTrue(is_float($fastest));
+        $this->assertTrue(is_float($slowest));
+        $this->assertTrue(count($result["details"]) === 3);
+        $this->assertEquals(
+            ['str_starts_with()', 'strpos()', 'strpbrk()'],
+            array_keys($result["details"]),
+        );
+        foreach ($result["details"] as $key => $res) {
+            $this->assertArrayHasKey('time', $res);
+            $this->assertArrayHasKey('average', $res);
+            $this->assertTrue(is_float($res['time']));
+            $this->assertTrue(is_float($res['average']));
+            $this->assertFalse($res['time'] < 0);
+            $this->assertFalse($res['average'] < 0);
+            $this->assertTrue($res["time"] >= $fastest);
+            $this->assertTrue($res["time"] <= $slowest);
+            $this->assertTrue(is_float($res["relative_to_fastest"]));
+            $this->assertTrue(is_float($res["relative_to_slowest"]));
+            $this->assertTrue($res["relative_to_fastest"] >= 1);
+            $this->assertTrue($res["relative_to_slowest"] <= 1);
+        }
+        $this->assertSame((float) 1, $result["details"][$fastestKey]["relative_to_fastest"]);
+        $this->assertSame((float) 1, $result["details"][$slowestKey]["relative_to_slowest"]);
+    }
 }
