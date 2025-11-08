@@ -133,4 +133,46 @@ class Benchmark
             ) . PHP_EOL;
         }
     }
+
+    /**
+     * Returns the analyzed results.
+     * @param   \Closure[]  $callbacks
+     * @param   int         $iteration = 1
+     * @return  array<string, array{time: float, average: float}>
+     */
+    public static function getAnalyzedResults(
+        array $callbacks,
+        int $iteration = 1,
+    ): array {
+        $analyzed = [];
+        $measured = static::getResults($callbacks, $iteration);
+
+        $min = null;
+        $max = null;
+        $keyMin = null;
+        $keyMax = null;
+        foreach ($measured as $key => $result) {
+            if (is_null($min) || $result['time'] < $min) {
+                $min = $result['time'];
+                $keyMin = $key;
+            }
+            if (is_null($max) || $result['time'] > $max) {
+                $max = $result['time'];
+                $keyMax = $key;
+            }
+        }
+        $analyzed["fastest"] = [$keyMin => $measured[$keyMin]];
+        $analyzed["slowest"] = [$keyMax => $measured[$keyMax]];
+        $analyzed["details"] = [];
+
+        foreach ($measured as $name => $result) {
+            $analyzed["details"][$name] = [
+                'time' => $result['time'],
+                'average' => $result['average'],
+                'relative_to_fastest' => $min > 0 ? $result['time'] / $min : null,
+                'relative_to_slowest' => $max > 0 ? $result['time'] / $max : null,
+            ];
+        }
+        return $analyzed;
+    }
 }
