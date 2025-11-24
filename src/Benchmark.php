@@ -139,8 +139,8 @@ class Benchmark
      * @param   \Closure[]  $callbacks
      * @param   int         $iteration = 1
      * @return  array{
-     *   fastest: array<string, array{time: float, average: float}>,
-     *   slowest: array<string, array{time: float, average: float}>,
+     *   fastest: array<string, array{time: float, average: float}>|null,
+     *   slowest: array<string, array{time: float, average: float}>|null,
      *   details: array<string, array{
      *     time: float,
      *     average: float,
@@ -170,10 +170,17 @@ class Benchmark
                 $keyMax = $key;
             }
         }
-        $analyzed["fastest"] = [$keyMin => $measured[$keyMin]];
-        $analyzed["slowest"] = [$keyMax => $measured[$keyMax]];
-        $analyzed["details"] = [];
 
+        $analyzed["fastest"] = null;
+        $analyzed["slowest"] = null;
+        if (! is_null($keyMin)) {
+            $analyzed["fastest"] = [$keyMin => $measured[$keyMin]];
+        }
+        if (! is_null($keyMax)) {
+            $analyzed["slowest"] = [$keyMax => $measured[$keyMax]];
+        }
+
+        $analyzed["details"] = [];
         foreach ($measured as $name => $result) {
             $analyzed["details"][$name] = [
                 'time' => $result['time'],
@@ -209,13 +216,13 @@ class Benchmark
         $lname = max(count($lengths) > 0 ? $lengths : [1]);
         echo "Analyzed Results:" . PHP_EOL;
         echo "- Fastest: "
-            . key($results["fastest"]) . " ("
-            . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"   // @phpstan-ignore-line
-            . PHP_EOL;
+            . ( is_null($results["fastest"]) ? "N/A" : key($results["fastest"]) . " ("
+                . sprintf("%.6f sec", current($results["fastest"])['time']) . ")"   // @phpstan-ignore-line
+            ) . PHP_EOL;
         echo "- Slowest: "
-            . key($results["slowest"]) . " ("
-            . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"   // @phpstan-ignore-line
-            . PHP_EOL;
+            . ( is_null($results["slowest"]) ? "N/A" : key($results["slowest"]) . " ("
+                . sprintf("%.6f sec", current($results["slowest"])['time']) . ")"   // @phpstan-ignore-line
+            ) . PHP_EOL;
         echo "- Details:" . PHP_EOL;
         $format = "  %" . $lnumber . "s  "
                 . "%" . ($lname - 2) . "s    "
